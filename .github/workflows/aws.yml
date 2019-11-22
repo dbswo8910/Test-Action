@@ -37,25 +37,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Notify slack
-      id: slack
-      uses: voxmedia/github-action-slack-notify-build@v1
-      with:
-        channel: 'general'
-        status: STARTED
-        color: warning
+    - name: success notify
+      uses: rtCamp/action-slack-notify@master
       env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-
-    - name: Notify slack success
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      uses: voxmedia/github-action-slack-notify-build@v1
-      with:
-        message_id: ${{ steps.slack.outputs.message_id }}
-        channel: 'general'
-        status: SUCCESS
-        color: good
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_MESSAGE: 'Post Content :rocket:'
+        SLACK_CHANNEL: general
 
     - name: Checkout
       uses: actions/checkout@v1
@@ -100,4 +87,12 @@ jobs:
         service: sample-app-service
         cluster: default
         wait-for-service-stability: true
-    
+
+    - name: failure notify
+      if: failure()
+      uses: rtCamp/action-slack-notify@master
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_MESSAGE: 'Post Content :rocket:'
+        SLACK_CHANNEL: general
+        SLACK_COLOR: '#FF0000'
