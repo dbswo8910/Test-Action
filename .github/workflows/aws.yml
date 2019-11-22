@@ -40,6 +40,9 @@ jobs:
     - name: Slack notification
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_USERNAME: GitHub Actions
+        SLACK_CHANNEL: general
+        SLACK_OVERRIDE_MESSAGE: 'Custom message'
       uses: Ilshidur/action-slack@master
       with:
         args: 'A new commit has been pushed to dbswo8910/Test-Action.'
