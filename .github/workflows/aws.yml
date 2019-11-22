@@ -37,15 +37,25 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Slack notification
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_USERNAME: GitHub Actions
-        SLACK_CHANNEL: general
-        SLACK_OVERRIDE_MESSAGE: 'Custom message'
-      uses: Ilshidur/action-slack@master
+    - name: Notify slack
+      id: slack
+      uses: voxmedia/github-action-slack-notify-build@v1
       with:
-        args: 'A new commit has been pushed to dbswo8910/Test-Action.'
+        channel: 'general'
+        status: STARTED
+        color: warning
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+    - name: Notify slack success
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      uses: voxmedia/github-action-slack-notify-build@v1
+      with:
+        message_id: ${{ steps.slack.outputs.message_id }}
+        channel: 'general'
+        status: SUCCESS
+        color: good
 
     - name: Checkout
       uses: actions/checkout@v1
@@ -90,3 +100,4 @@ jobs:
         service: sample-app-service
         cluster: default
         wait-for-service-stability: true
+    
