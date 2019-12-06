@@ -39,10 +39,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: GitHub Action for pytest
-      uses: cclauss/GitHub-Action-for-pytest@master
-      with:
-        args: pip install --no-cache-dir -r /requirements_base.txt /requirements_dev.txt ; pytest
+    - name: Test
+      id: test
+      run: |
+        pip install -r requirements_base.txt requirements_dev.txt
+        pytest
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -69,21 +70,12 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-    - name: Fill in the new image ID in the Amazon ECS task definition
+    - name: Elastic Beanstalk Deploy
       id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: task-definition.json
-        container-name: sample-app
-        image: ${{ steps.build-image.outputs.image }}
-
-    - name: Deploy Amazon ECS task definition
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: sample-app-service
-        cluster: default
-        wait-for-service-stability: true
+      run: |
+        pip install awsebcli --upgrade --user
+        eb init -r ap-northeast-2 -p "multi-container-docker-18.09.9-ce-(generic)"
+        eb deploy
 
     - name: Slack Notification
       uses: 8398a7/action-slack@v2
