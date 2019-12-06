@@ -82,7 +82,9 @@ jobs:
     - name: Elastic Beanstalk Deploy
       id: task-def
       run: |
+        pip install awscli
         pip install awsebcli --upgrade --user
+        echo ‘export PATH="/Library/Frameworks/Python.framework/Versions/3.6${PATH}"' >> ~/.bash_profile && source ~/.bash_profile
         eb init -r ap-northeast-2 -p "multi-container-docker-18.09.9-ce-(generic)"
         eb deploy
 
