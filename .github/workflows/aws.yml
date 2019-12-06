@@ -84,7 +84,7 @@ jobs:
       run: |
         pip install awscli
         pip install awsebcli
-        eb init -r ap-northeast-2 -p "multi-container-docker-18.09.9-ce-(generic)"
+        eb init -r ap-northeast-2 -p "multi-container-docker-18.09.9-ce-(generic)" test-action
         eb deploy
 
     - name: Slack Notification
