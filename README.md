@@ -1,3 +1,6 @@
+[![GitHub Actions status](https://github.com/dbswo8910/Test-Action/workflows/CI/badge.svg)](https://github.com/dbswo8910/Test-Action/actions?workflow=CI)
+
+
 # Test-Action
 ## **Getting started with a workflow**
 
