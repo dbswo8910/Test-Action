@@ -5,4 +5,5 @@ RUN apt-get install -y python-pip python-dev build-essential
 COPY . /app
 WORKDIR /app
 RUN pip install -r requirements_base.txt
+EXPOSE 5000
 CMD ["python", "app.py"]
