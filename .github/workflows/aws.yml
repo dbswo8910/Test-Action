@@ -26,7 +26,8 @@
 
 on:
   pull_request:
-    types: [assigned]
+    types: 
+      - assigned
     branches:
       - master
 
